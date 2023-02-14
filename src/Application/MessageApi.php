@@ -8,9 +8,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Wanphp\Libray\Slim\Setting;
 use Wanphp\Libray\Slim\WpUserInterface;
-use Wanphp\Plugins\messageBoard\Domain\ImageInterface;
-use Wanphp\Plugins\messageBoard\Domain\MessageInterface;
-use Wanphp\Plugins\messageBoard\Domain\ReplyInterface;
+use Wanphp\Plugins\MessageBoard\Domain\ImageInterface;
+use Wanphp\Plugins\MessageBoard\Domain\MessageInterface;
+use Wanphp\Plugins\MessageBoard\Domain\ReplyInterface;
 
 class MessageApi extends Api
 {

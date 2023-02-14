@@ -3,8 +3,8 @@
 namespace Wanphp\Plugins\MessageBoard\Repositories;
 
 use Wanphp\Libray\Mysql\Database;
-use Wanphp\Plugins\messageBoard\Domain\ImageInterface;
-use Wanphp\Plugins\messageBoard\Entities\ImageEntity;
+use Wanphp\Plugins\MessageBoard\Domain\ImageInterface;
+use Wanphp\Plugins\MessageBoard\Entities\ImageEntity;
 
 class ImageRepository extends \Wanphp\Libray\Mysql\BaseRepository implements ImageInterface
 {

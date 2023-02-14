@@ -5,14 +5,14 @@ namespace Wanphp\Plugins\MessageBoard\Application\Manage;
 use Psr\Http\Message\ResponseInterface as Response;
 use Wanphp\Libray\Slim\Action;
 use Wanphp\Libray\Slim\WpUserInterface;
-use Wanphp\Plugins\messageBoard\Domain\ImageInterface;
-use Wanphp\Plugins\messageBoard\Domain\MessageInterface;
+use Wanphp\Plugins\MessageBoard\Domain\ImageInterface;
+use Wanphp\Plugins\MessageBoard\Domain\MessageInterface;
 
 /**
  * Class MessageAction
  * @title 留言板
  * @route /admin/messageBoard
- * @package Wanphp\Plugins\messageBoard\Application\Manage
+ * @package Wanphp\Plugins\MessageBoard\Application\Manage
  */
 class MessageAction extends Action
 {
