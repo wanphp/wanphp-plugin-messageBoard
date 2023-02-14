@@ -1,6 +1,6 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Application\Manage;
+namespace Wanphp\Plugins\MessageBoard\Application\Manage;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Wanphp\Libray\Slim\Action;

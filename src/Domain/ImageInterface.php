@@ -1,6 +1,6 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Domain;
+namespace Wanphp\Plugins\MessageBoard\Domain;
 
 interface ImageInterface extends \Wanphp\Libray\Mysql\BaseInterface
 {

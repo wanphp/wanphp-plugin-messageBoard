@@ -1,11 +1,10 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Repositories;
+namespace Wanphp\Plugins\MessageBoard\Repositories;
 
 use Wanphp\Libray\Mysql\Database;
-use Wanphp\Plugins\messageBoard\Domain\MessageInterface;
-use Wanphp\Plugins\messageBoard\Domain\ReplyInterface;
-use Wanphp\Plugins\messageBoard\Entities\MessageEntity;
+use Wanphp\Plugins\MessageBoard\Domain\MessageInterface;
+use Wanphp\Plugins\MessageBoard\Entities\MessageEntity;
 
 class MessageRepository extends \Wanphp\Libray\Mysql\BaseRepository implements MessageInterface
 {

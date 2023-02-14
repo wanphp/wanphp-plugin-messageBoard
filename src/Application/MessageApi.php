@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Api\Civilization;
+namespace Wanphp\Plugins\MessageBoard\Application;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Wanphp\Libray\Slim\Setting;
 use Wanphp\Libray\Slim\WpUserInterface;
-use Wanphp\Plugins\messageBoard\Application\Api;
 use Wanphp\Plugins\messageBoard\Domain\ImageInterface;
 use Wanphp\Plugins\messageBoard\Domain\MessageInterface;
 use Wanphp\Plugins\messageBoard\Domain\ReplyInterface;

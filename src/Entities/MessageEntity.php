@@ -1,6 +1,6 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Entities;
+namespace Wanphp\Plugins\MessageBoard\Entities;
 
 use Wanphp\Libray\Mysql\EntityTrait;
 

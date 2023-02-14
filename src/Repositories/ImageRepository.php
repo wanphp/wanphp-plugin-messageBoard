@@ -1,6 +1,6 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Repositories;
+namespace Wanphp\Plugins\MessageBoard\Repositories;
 
 use Wanphp\Libray\Mysql\Database;
 use Wanphp\Plugins\messageBoard\Domain\ImageInterface;

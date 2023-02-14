@@ -1,6 +1,6 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Domain;
+namespace Wanphp\Plugins\MessageBoard\Domain;
 
 interface ReplyInterface extends \Wanphp\Libray\Mysql\BaseInterface
 {

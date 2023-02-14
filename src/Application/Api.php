@@ -1,6 +1,6 @@
 <?php
 
-namespace Wanphp\Plugins\messageBoard\Application;
+namespace Wanphp\Plugins\MessageBoard\Application;
 
 use Wanphp\Libray\Slim\Action;
 
