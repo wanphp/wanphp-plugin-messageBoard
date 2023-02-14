@@ -1,0 +1,27 @@
+{
+  "name": "wanphp/plugins-message-board",
+  "type": "wanphp-plugin",
+  "description": "留言板",
+  "keywords": [
+    "message blard"
+  ],
+  "homepage": "https://www.wanphp.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "火子",
+      "email": "wanphp@outlook.com"
+    }
+  ],
+  "require": {
+    "wanphp/installers": "^1.0.0",
+    "wanphp/libray-slim": "^1.0.0",
+    "wanphp/libray-mysql": "^1.0.0",
+    "wanphp/libray-user": "^1.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wanphp\\Plugins\\messageBoard\\": "/src"
+    }
+  }
+}

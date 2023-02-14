@@ -1,0 +1,82 @@
+{% extends "admin/common/base.html" %}
+{% block styles %}
+<!-- DataTables -->
+<link rel="stylesheet" href="/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+{% endblock %}
+{% block container %}
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">{{title}}</h3>
+  </div>
+  <div class="card-body">
+    <table id="dataList" class="table table-sm table-bordered table-hover">
+      <thead>
+      <tr>
+        <th style="width: 60px">ID</th>
+        <th>用户</th>
+        <th>留言</th>
+        <th>提交时间</th>
+        <th style="width: 120px;">操作</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+{% endblock %}
+
+{% block scripts %}
+<!-- DataTables -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/js/dataTable.defaults.js"></script>
+<script src="/plugins/moment/moment.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    var datatables = $('#dataList').DataTable({
+      ajax: "/admin/messageBoard",
+      columns: [
+        {data: "id"},
+        {
+          data: "user", render: function (data, type, row, meta) {
+            return '<img src="' + data.headimgurl + '" height="25">' + data.nickname;
+          }
+        },
+        {data: "description"},
+        {
+          data: "addTime", render: function (data, type, row, meta) {
+            return moment(new Date(parseInt(data) * 1000)).format('YYYY-MM-DD HH:mm:ss');
+          }
+        },
+        {
+          data: "op", render: function (data, type, row, meta) {
+            return '<button type="button" class="btn btn-tool del"><i class="fas fa-trash-alt"></i>删除</button>';
+          }
+        }
+      ]
+    });
+    $('#dataList tbody').on('click', 'button.del', function () {
+      var data = datatables.row($(this).parents('tr')).data();
+      var deltr = $(this).parents('tr');
+      dialog('删除留言', '是否确认删除留言', function () {
+        $.ajax({
+          url: '/admin/messageBoard/' + data.id,
+          type: 'POST',
+          headers: {"X-HTTP-Method-Override": "DELETE"},
+          dataType: 'json',
+          success: function (data) {
+            datatables.row(deltr).remove().draw(false);
+            Swal.fire({icon: 'success', title: '删除成功！', showConfirmButton: false, timer: 1500});
+          },
+          error: errorDialog
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}
