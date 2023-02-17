@@ -1,6 +1,7 @@
 <?php
 
 namespace Wanphp\Plugins\MessageBoard\Entities;
+
 use Wanphp\Libray\Mysql\EntityTrait;
 
 /**
@@ -33,6 +34,12 @@ class ImageEntity implements \JsonSerializable
    * @var integer
    */
   private int $type;
+  /**
+   * @DBType({"type":"int(10) NOT NULL DEFAULT 0"})
+   * @OA\Property(description="图片Id")
+   * @var integer
+   */
+  private int $imageId;
   /**
    * @DBType({"type":"varchar(50) NOT NULL DEFAULT ''"})
    * @OA\Property(description="图片地址")

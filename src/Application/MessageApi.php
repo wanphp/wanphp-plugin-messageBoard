@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Wanphp\Libray\Slim\Setting;
+use Wanphp\Libray\Slim\UploaderInterface;
 use Wanphp\Libray\Slim\WpUserInterface;
 use Wanphp\Plugins\MessageBoard\Domain\ImageInterface;
 use Wanphp\Plugins\MessageBoard\Domain\MessageInterface;
@@ -17,9 +18,9 @@ class MessageApi extends Api
   private LoggerInterface $logger;
   private MessageInterface $message;
   private WpUserInterface $user;
+  private UploaderInterface $uploader;
   private ImageInterface $image;
   private ReplyInterface $reply;
-  private mixed $filepath;
   private string $applicationPath;
   private array $admin;
 
@@ -28,25 +29,27 @@ class MessageApi extends Api
    * @param Setting $setting
    * @param MessageInterface $message
    * @param WpUserInterface $user
+   * @param UploaderInterface $uploader
    * @param ImageInterface $image
    * @param ReplyInterface $reply
    */
   public function __construct(
-    LoggerInterface  $logger,
-    Setting          $setting,
-    MessageInterface $message,
-    WpUserInterface  $user,
-    ImageInterface   $image,
-    ReplyInterface   $reply
+    LoggerInterface   $logger,
+    Setting           $setting,
+    MessageInterface  $message,
+    WpUserInterface   $user,
+    UploaderInterface $uploader,
+    ImageInterface    $image,
+    ReplyInterface    $reply
   )
   {
     $this->logger = $logger;
-    $this->filepath = $setting->get('uploadFilePath');
     $messageBoard = $setting->get('messageBoard');
     $this->applicationPath = $messageBoard['applicationPath'];
     $this->admin = $messageBoard['adminUid'];
     $this->message = $message;
     $this->user = $user;
+    $this->uploader = $uploader;
     $this->image = $image;
     $this->reply = $reply;
   }
@@ -103,19 +106,36 @@ class MessageApi extends Api
         $data = $this->request->getParsedBody();
         if (empty($data)) return $this->respondWithError('无数据');
         $num = $this->message->update($data, ['id' => $id]);
+        if (!empty($data['images'])) {
+          $msgImage = [];
+          // 现有图片
+          $images = $this->image->select('imageId', ['msgId' => $id, 'type' => 0]);
+          foreach ($data['images'] as $image) {
+            $image = explode('|', $image);
+            if (!in_array($image[0], $images)) $msgImage[] = ['msgId' => $id, 'type' => 0, 'imageId' => $image[0], 'url' => $image[1]];
+          }
+          $this->image->insert($msgImage);
+          // 删除图片
+          $newImages = array_column($msgImage, 'imageId');
+          $delImages = array_diff($images, $newImages);
+          if ($delImages) {
+            $this->image->delete(['imageId' => $delImages]);
+            foreach ($delImages as $delImage) $this->uploader->delFile($delImage);
+          }
+        }
         return $this->respondWithData(['upNum' => $num], 201);
       case 'DELETE';
         $id = $this->resolveArg('id');
         $delNum = $this->message->delete(['id' => $id]);
         if ($delNum > 0) {
           // 留言图片
-          $images = $this->image->select('url', ['msgId' => $id, 'type' => 0]);
-          if ($images) foreach ($images as $image) if (is_file($this->filepath . $image)) unlink($this->filepath . $image); //删除文件
+          $images = $this->image->select('imageId', ['msgId' => $id, 'type' => 0]);
+          if ($images) foreach ($images as $imageId) $this->uploader->delFile($imageId); //删除文件
           // 回复图片
           $replyId = $this->reply->select('id', ['msgId' => $id]);
           if ($replyId) {
-            $images = $this->image->select('url', ['msgId' => $replyId, 'type' => 1]);
-            if ($images) foreach ($images as $image) if (is_file($this->filepath . $image)) unlink($this->filepath . $image); //删除文件
+            $images = $this->image->select('imageId', ['msgId' => $replyId, 'type' => 1]);
+            if ($images) foreach ($images as $imageId) $this->uploader->delFile($imageId); //删除文件
           }
           $delNum += $this->reply->delete(['msgId' => $id]);
           $delNum += $this->image->delete(['msgId' => $id]);
@@ -248,6 +268,23 @@ class MessageApi extends Api
         $data = $this->request->getParsedBody();
         if (empty($data)) return $this->respondWithError('无数据');
         $num = $this->reply->update($data, ['id' => $id]);
+        if (!empty($data['images'])) {
+          $msgImage = [];
+          // 现有图片
+          $images = $this->image->select('imageId', ['msgId' => $id, 'type' => 1]);
+          foreach ($data['images'] as $image) {
+            $image = explode('|', $image);
+            if (!in_array($image[0], $images)) $msgImage[] = ['msgId' => $id, 'type' => 1, 'imageId' => $image[0], 'url' => $image[1]];
+          }
+          $this->image->insert($msgImage);
+          // 删除图片
+          $newImages = array_column($msgImage, 'imageId');
+          $delImages = array_diff($images, $newImages);
+          if ($delImages) {
+            $this->image->delete(['imageId' => $delImages]);
+            foreach ($delImages as $delImage) $this->uploader->delFile($delImage);
+          }
+        }
         return $this->respondWithData(['upNum' => $num], 201);
       case 'DELETE';
         $id = $this->resolveArg('id');
@@ -255,7 +292,7 @@ class MessageApi extends Api
         if ($delNum > 0) {
           // 删除图片
           $images = $this->image->select('url', ['msgId' => $id, 'type' => 1]);
-          if ($images) foreach ($images as $image) if (is_file($this->filepath . $image)) unlink($this->filepath . $image); //删除文件
+          if ($images) foreach ($images as $imageId) $this->uploader->delFile($imageId); //删除文件
           $delNum += $this->image->delete(['msgId' => $id, 'type' => 1]);
         }
         return $this->respondWithData(['delNum' => $delNum], 200);
